@@ -7,7 +7,7 @@ import string
 
 
 
-def isFetchable(pageURL, rp, agentName = 'TTS', domainLimit = 'http://ir.inf.ed.ac.uk'):
+def isFetchable(pageURL, rp, agentName, domainLimit):
 	
 	#Test 1 : is the page outside the domain 
 	if not(pageURL.startswith(domainLimit)) :
@@ -53,5 +53,5 @@ def getContentInside(content):
 def hasBeenTranslated(content,targetLanguage):
 	'''Change here for another setting
 	in our case we check if the list "translation" has targetLanguage'''
-	interestingPart = re.compile('(?<=\<form class="languages go" method="get" action="#">)(.*?)(?=</form\>)',re.DOTALL).findall(content)
+	interestingPart = re.compile('(?<=\<form class="languages go" method="get")(.*?)(?=</form\>)',re.DOTALL).findall(content)
 	return (targetLanguage in interestingPart[0])

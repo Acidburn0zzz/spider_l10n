@@ -34,7 +34,7 @@ tuple1 = (0,sourceURL)
 heapq.heappush(frontier,tuple1)
 exploredPages = []
 listePagesStatus =[]
-domainLimit = urllib.parse.urlparse(sourceURL).scheme+"://"+urllib.parse.urlparse(sourceURL).netloc
+domainLimit = urllib.parse.urlparse(sourceURL).scheme+"://"+urllib.parse.urlparse(sourceURL).netloc+urllib.parse.urlparse(sourceURL).path
 #Setting up robots according to robots.txt
 rp=urllib.robotparser.RobotFileParser()
 rp.set_url(domainLimit+"/robots.txt")
@@ -78,7 +78,7 @@ while frontier :
 				list_links.pop(i)
 			
 			#Is this link already known ?
-			elif link in exploredPages:
+			elif link in exploredPages or link==currentPageToExplore:
 				listAbsolute.remove(link)
 				list_links.pop(i)
 				#Compute score 
@@ -110,9 +110,9 @@ while frontier :
 		#we don't have multiple threads/crawlers
 		time.sleep(crawlDelay)
 	
-for page in exploredPages:
-	print(page)
-
+'''for page in exploredPages:
+	print(page)'''
+print(listePagesStatus)
 
 
 
