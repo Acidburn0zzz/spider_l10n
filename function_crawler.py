@@ -47,6 +47,21 @@ def readFile(filename):
 	    f.close()
 	return content
 
+def saveFile(data, filename):
+	string = ''
+	array = []
+	f = open(filename, 'w')
+	try:
+		if type(data) == type(string):
+			f.write(data)
+		if type(data) == type(array):
+			for d in data:
+				f.write(str(d) + '\n')
+	finally:
+		f.close()
+
+
+
 def getContentInside(content): 
 	return re.compile('<body(.*?)</body>', re.DOTALL).findall(content)
 
