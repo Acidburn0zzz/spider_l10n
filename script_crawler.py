@@ -1,7 +1,8 @@
 import re
 import sys 
 import string
-from urllib.parse import urlparse
+import urllib.parse
+import urllib.request
 import heapq
 import time
 
@@ -9,10 +10,10 @@ import time
 #Other file
 import function_crawler
 
-if len(sys.argv)!=3:
-	print 'The first argument should be the source URL of the domain to analyze.'
-	print 'The second one is the name of the language (see hasBeenTranslated method)'
-	print 'The third is the crawl_delay in the robots.txt'
+if len(sys.argv)!=4:
+	print('The first argument should be the source URL of the domain to analyze.')
+	print('The second one is the name of the language (see hasBeenTranslated method)')
+	print('The third is the crawl_delay in the robots.txt')
 	exit() 
 sourceURL = sys.argv[1]
 targetLanguage = sys.argv[2]
@@ -20,10 +21,10 @@ crawlDelay = int(sys.argv[3])
 
 agentName = 'MDN_translation_analysis'
 
-print '--------------------------------------'
-print 'The origin URL address is :'+ sourceURL
-print 'The name of the agent is : '+agentName
-print '--------------------------------------'
+print('--------------------------------------')
+print('The origin URL address is :'+ sourceURL)
+print('The name of the agent is : '+agentName)
+print('--------------------------------------')
 
 
 
@@ -33,7 +34,7 @@ tuple1 = (0,sourceURL)
 heapq.heappush(frontier,tuple1)
 exploredPages = []
 listePagesStatus =[]
-domainLimit = urlparse(sourceURL).netloc
+domainLimit = urllib.parse.urlparse(sourceURL).scheme+"://"+urllib.parse.urlparse(sourceURL).netloc
 #Setting up robots according to robots.txt
 rp=urllib.robotparser.RobotFileParser()
 rp.set_url(domainLimit+"/robots.txt")
@@ -47,23 +48,26 @@ while frontier :
 	#The tuple is composed of score + url
 	currentPageToExplore = tupleCurrent[1]
 	if currentPageToExplore not in exploredPages:
-		print 'Page is : '+currentPageToExplore
-		urlRequest = urllib.request(currentPageToExplore)
+		print('Page is : '+currentPageToExplore)
+		urlRequest = urllib.request.urlopen(currentPageToExplore)
 
-		#get a list of things inside <!-- CONTENT --> & <!-- /CONTENT -->	
-		content = function_crawler.getContentInside(storageFile)
+		#get a list of things inside body	
+		contentPage=urlRequest.read().decode('utf-8')
+		listContent = function_crawler.getContentInside(contentPage)
 
-		#loop (maybe many pairs of content... who knows)
+		#loop (maybe many pairs of listContent... who knows)
 		list_links = []
-		for c in content:
+		for c in listContent:
 			list_links += function_crawler.getListLinks(c)
 
 		#Now we have every link : make them absolute considering the current webpage 
 		#in case we may encounter other directories
 		listAbsolute=[]	
 		for link in list_links:
-			link = urlparse.urljoin(currentPageToExplore,link)
-			#print link
+			link = urllib.parse.urljoin(currentPageToExplore,link)
+			linkParseResult = urllib.parse.urlparse(link)
+			#avoid anchor repetition
+			link=linkParseResult.scheme+"://"+linkParseResult.netloc+linkParseResult.path
 			listAbsolute.append(link)
 		
 		for i,link in enumerate(listAbsolute):
@@ -92,18 +96,22 @@ while frontier :
 					#print "correct link added : "+link
 
 		exploredPages.append(currentPageToExplore)
-		print "Frontier is : "+str(len(frontier))
-		print "# of explored pages : "+str(len(exploredPages))
+		print("Frontier is : "+str(len(frontier)))
+		print("# of explored pages : "+str(len(exploredPages)))
 
 		#Is the current page translated ? 
-		listePagesStatus.append((currentPageToExplore,function_crawler.hasBeenTranslated(content,targetLanguage)))
+		if function_crawler.hasBeenTranslated(contentPage,targetLanguage):
+			listePagesStatus.append((currentPageToExplore,"translated"))
+		else:
+			print("non translated page found : "+currentPageToExplore)
+			listePagesStatus.append((currentPageToExplore,"non-translated"))
 
 		#Wait because of crawl/delay and ratio/request as far as
 		#we don't have multiple threads/crawlers
 		time.sleep(crawlDelay)
 	
 for page in exploredPages:
-	print page		
+	print(page)
 
 
 
