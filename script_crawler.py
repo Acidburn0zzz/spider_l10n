@@ -114,8 +114,8 @@ while frontier :
 
 				#Wait because of crawl/delay and ratio/request as far as
 				#we don't have multiple threads/crawlers
-				time.sleep(crawlDelay)
-		except urllib.error.HTTPError:
+				#time.sleep(crawlDelay)
+		except (urllib.error.HTTPError,urllib.error.URLError):
 			print("There has been an error with page"+currentPageToExplore)
 			listErrorPages.append(currentPageToExplore)
 '''for page in exploredPages:
