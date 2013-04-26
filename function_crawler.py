@@ -69,4 +69,7 @@ def hasBeenTranslated(content,targetLanguage):
 	'''Change here for another setting
 	in our case we check if the list "translation" has targetLanguage'''
 	interestingPart = re.compile('(?<=\<form class="languages go" method="get")(.*?)(?=</form\>)',re.DOTALL).findall(content)
-	return (targetLanguage in interestingPart[0])
+	if len(interestingPart)>0:
+		return (targetLanguage in interestingPart[0])
+	else:
+		return False
