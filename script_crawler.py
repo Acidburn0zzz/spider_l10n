@@ -114,13 +114,13 @@ while frontier :
 
 				#Wait because of crawl/delay and ratio/request as far as
 				#we don't have multiple threads/crawlers
-				#time.sleep(crawlDelay)
-		except (urllib.error.HTTPError,urllib.error.URLError):
+				time.sleep(crawlDelay)
+		except (urllib.error.HTTPError,urllib.error.URLError,UnicodeEncodeError):
 			print("There has been an error with page"+currentPageToExplore)
 			listErrorPages.append(currentPageToExplore)
 '''for page in exploredPages:
 	print(page)'''
-print(listePagesStatus)
+#print(listePagesStatus)
 function_crawler.saveFile(listePagesStatus,"log_crawl.txt")
 function_crawler.saveFile(listErrorPages,"log_error_pages.txt")
 
