@@ -35,6 +35,7 @@ heapq.heappush(frontier,tuple1)
 exploredPages = []
 listePagesStatus =[]
 listErrorPages=[]
+counterNT=0
 domainLimit = urllib.parse.urlparse(sourceURL).scheme+"://"+urllib.parse.urlparse(sourceURL).netloc+urllib.parse.urlparse(sourceURL).path
 #Setting up robots according to robots.txt
 rp=urllib.robotparser.RobotFileParser()
@@ -111,7 +112,7 @@ while frontier :
 				else:
 					print("non translated page found : "+currentPageToExplore)
 					listePagesStatus.append((currentPageToExplore,"non-translated"))
-
+					counterNT=counterNT+1
 				#Wait because of crawl/delay and ratio/request as far as
 				#we don't have multiple threads/crawlers
 				time.sleep(crawlDelay)
@@ -123,7 +124,9 @@ while frontier :
 #print(listePagesStatus)
 function_crawler.saveFile(listePagesStatus,"log_crawl.txt")
 function_crawler.saveFile(listErrorPages,"log_error_pages.txt")
-
+print("Number of non-translated pages: "+str(counterNT))
+print("Number of pages with error: "+str(len(listErrorPages)))
+print("End of script : files saved under log_crawl.txt and log_error_pages.txt")
 
 
 
