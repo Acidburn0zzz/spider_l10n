@@ -40,7 +40,7 @@ def checkURL(url):
 def filteredLink(link):
 	#Change here if another setting
 	#Set of filters to implement
-	return ("$revision" in link) or ("$history" in link)	or ("$edit" in link) or (link=="https://developer.mozilla.org/en-US/docs/new")
+	return ("$revision" in link) or ("$history" in link)	or ("$edit" in link) or ("$locale" in link) or (link=="https://developer.mozilla.org/en-US/docs/new")
 
 def readFile(filename):
 	f = open(filename, 'r')
