@@ -9,6 +9,7 @@ The syntax is the following :
 `python script_crawler.py url_of_site target_language crawl_delay`
 
 (please follow the directives of robots.txt)
+
 OR if a previous crawl ran over more than 100 pages
 
 `python script_crawler.py resume`
