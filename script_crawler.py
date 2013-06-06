@@ -83,7 +83,7 @@ while frontier :
 	if currentPageToExplore not in exploredPages:
 		#Handle 404 error : make sure that connection was not interrupted to be certain of result consistency 
 		try:
-			urlRequest = urllib.request.urlopen(currentPageToExplore)
+			urlRequest = urllib.request.urlopen(urllib.parse.quote_plus(currentPageToExplore,"/:"))
 			#the input argument has to have the same scheme (e.g. http -> https won't work)
 			#Cut the  URL with possible "?redirect"
 			currentPageToExplore=urlRequest.geturl().split('?redirect')[0]
