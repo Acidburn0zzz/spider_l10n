@@ -28,7 +28,11 @@ listTranslatedOthers = []
 listNonTranslatedOthers = []
 for (url, status) in listTuples:
     currSub = url.replace(baseAdress, '')
-    currSub = currSub.split('/')[0]
+    decomp = currSub.split('/')
+    if (len(decomp)>1):
+        currSub=decomp[0]+'/'+decomp[1]
+    else:
+        currSub = decomp[0]
     if not currSub == oldSub:
         if counter > 10:
             listSub.append((oldSub, counterTranslated, counterNonTranslated, listTranslated, listNonTranslated))
@@ -76,7 +80,7 @@ print('''<!DOCTYPE html>
             <ul id="expList">''')
 for sub in listSub:
     print("\t\t\t\t<li>")
-    print("\t\t\t\t"+sub[0]+':'+str(sub[2]+sub[1])+' pages ~'+str(round((sub[1]/(sub[1]+sub[2]))*100))+"% translated")
+    print("\t\t\t\t"+sub[0]+':'+str(sub[2]+sub[1])+' pages ~'+str(round((float(sub[1])/float(sub[1]+sub[2]))*100.0))+"% translated")
     print("\t\t\t\t\t<ul>")
     print("\t\t\t\t\t\t<li>")
     print("\t\t\t\t\t\t non-translated :"+str(sub[2]))
@@ -142,7 +146,7 @@ for sub in listSub:
     print("\t\t\t\t\t<td>"+str(sub[2]+sub[1])+"</td>")
     print("\t\t\t\t\t<td>"+str(sub[1])+"</td>")
     print("\t\t\t\t\t<td>"+str(sub[2])+"</td>")
-    print("\t\t\t\t\t<td>"+str(round((sub[1]/(sub[1]+sub[2]))*100))+"</td>")
+    print("\t\t\t\t\t<td>"+str(round((float(sub[1])/float(sub[1]+sub[2]))*100.0))+"</td>")
     print("\t\t\t\t</tr>")
 print("\t\t\t</table>")
 print('''
